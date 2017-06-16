@@ -57,7 +57,7 @@ const hasRunToday = () => {
           return resolve(false);
         }
 
-        reject(error);
+        return reject(error);
       }
 
       const writtenDate = data.toString();
