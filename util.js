@@ -53,11 +53,7 @@ const hasRunToday = () => {
   return new Promise((resolve, reject) => {
     fs.readFile('lastrun.txt', (error, data) => {
       if (error !== null) {
-        if (error.errno === -4058) {
-          return resolve(false);
-        }
-
-        return reject(error);
+        return resolve(false);
       }
 
       const writtenDate = data.toString();
