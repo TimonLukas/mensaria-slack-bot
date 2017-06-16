@@ -12,6 +12,7 @@ const PORT = process.env.SLACK_MENSA_PORT || 8020;
 const app = express();
 
 app.get('/', (request, response) => {
+  response.end('');
   util.hasRunToday().then(hasRun => {
     if (!hasRun) {
       util.getHtml().then(html => {
