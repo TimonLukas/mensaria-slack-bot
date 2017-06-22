@@ -28,21 +28,36 @@ app.get('/', (request, response) => {
             return res;
           }, []);
 
-          const dishMessage = dishes.map(dish => {
+          const dishMessages = dishes.map(dish => {
             return dish.filteredContents(commonElements).render();
-          }).join('\r\n\r\n');
+          });
 
           const todaysDate = moment().format('DD.MM.YYYY');
-          const message = `<!channel> Das Mensa-Menü für den ${todaysDate}:\r\n• ${commonElements.join('\r\n• ')}\r\n\r\n${dishMessage}`;
+          const message = `<!channel> Das Mensa-Menü für den ${todaysDate}:\r\n• ${commonElements.join('\r\n• ')}`;
+
+          const submitMessage = (messageQueue) => {
+            client.chat.postMessage('mensa', messageQueue[0], (error, result) => {
+              if (typeof error !== 'undefined') {
+                throw error;
+              }
+
+              if(messageQueue.length > 1) {
+                submitMessage(messageQueue.slice(1));
+              }
+            });
+          };
 
           if (process.env.DEBUG !== 'true') {
             client.chat.postMessage('mensa', message, (error, result) => {
               if (typeof error !== 'undefined') {
                 throw error;
               }
+
+              submitMessage(dishMessages);
             });
           } else {
             console.log(message);
+            console.log(dishMessages);
           }
         }
       });
