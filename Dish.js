@@ -1,5 +1,5 @@
 module.exports = class Dish {
-  constructor (title, content, price) {
+  constructor (title, content, price, type) {
     this.title = title;
     if (typeof content === 'object') {
       this.contents = content;
@@ -7,10 +7,11 @@ module.exports = class Dish {
       this.contents = [].concat.apply([], content.split(", ").map(c => c.split(" oder ")));
     }
     this.price = price;
+    this.type = type;
   }
 
   render () {
-    return `*${this.title}* _(${this.price})_\r\n• ${this.contents.join('\r\n• ')}`;
+    return `*${this.title}* (${this.type}) _(${this.price})_\r\n• ${this.contents.join('\r\n• ')}`;
   }
 
   filteredContents (commonElements) {
@@ -21,7 +22,8 @@ module.exports = class Dish {
           return element;
         }
       }),
-      this.price
+      this.price,
+      this.type
     );
   }
 };

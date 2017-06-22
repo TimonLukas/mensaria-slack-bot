@@ -22,6 +22,23 @@ const getHtml = () => {
   });
 };
 
+const getTypeFromIcon = (icon) => {
+  switch(icon) {
+    case "icon-fish":
+      return "Fisch";
+    case "icon-chicken":
+      return "Huhn";
+    case "icon-carrot":
+      return "Vegetarisch";
+    case "icon-pig":
+      return "Schwein";
+    case "icon-cow":
+      return "Rind";
+    default:
+      return "Unbekannt";
+  }
+};
+
 /**
  * Parses the HTML and extracts the dishes from it
  * @param html The HTML string from the Mensaria Metropol website
@@ -32,6 +49,8 @@ const getDishes = html => {
   const rows = $('#mensa_plan > table.t1 > tbody').children('tr');
 
   const dishes = rows.toArray().map((row) => {
+    const icon = $(row).find(".icon").removeClass("icon").attr("class");
+    const type = getTypeFromIcon(icon);
     const children = $(row).children('td');
     const title = children.eq(0).find('b').text();
 
@@ -43,7 +62,7 @@ const getDishes = html => {
 
     const price = children.eq(3).find('i').text();
 
-    return new Dish(title, content, price);
+    return new Dish(title, content, price, type);
   });
 
   return dishes;
