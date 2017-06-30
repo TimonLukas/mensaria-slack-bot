@@ -8,6 +8,7 @@ const express = require('express');
 const client = new WebClient(process.env.SLACK_TOKEN);
 
 const PORT = process.env.SLACK_MENSA_PORT || 8020;
+const CHANNEL = process.env.SLACK_MENSA_CHANNEL || '#mensa';
 
 const app = express();
 
@@ -36,7 +37,7 @@ app.get('/', (request, response) => {
           const message = `<!channel> Das Mensa-Menü für den ${todaysDate}:\r\n• ${commonElements.join('\r\n• ')}`;
 
           const submitMessage = (messageQueue) => {
-            client.chat.postMessage('mensa', messageQueue[0], (error, result) => {
+            client.chat.postMessage(CHANNEL, messageQueue[0], (error, result) => {
               if (typeof error !== 'undefined') {
                 throw error;
               }
@@ -48,7 +49,7 @@ app.get('/', (request, response) => {
           };
 
           if (process.env.DEBUG !== 'true') {
-            client.chat.postMessage('mensa', message, (error, result) => {
+            client.chat.postMessage(CHANNEL, message, (error, result) => {
               if (typeof error !== 'undefined') {
                 throw error;
               }
